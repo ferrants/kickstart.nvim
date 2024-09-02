@@ -91,7 +91,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -155,7 +155,7 @@ vim.opt.inccommand = 'split'
 vim.opt.cursorline = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
-vim.opt.scrolloff = 10
+vim.opt.scrolloff = 12
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
@@ -252,6 +252,51 @@ require('lazy').setup({
         delete = { text = '_' },
         topdelete = { text = '‾' },
         changedelete = { text = '~' },
+      },
+    },
+  },
+  {
+    'zbirenbaum/copilot.lua',
+    cmd = 'Copilot',
+    -- event = 'InsertEnter',
+    event = 'VimEnter',
+    -- config = function()
+    --   require('copilot').setup {}
+    -- end,
+    -- see config options https://github.com/zbirenbaum/copilot.lua?tab=readme-ov-file#setup-and-configuration
+    -- see example usage in lazy https://www.lazyvim.org/extras/coding/copilot
+    opts = {
+      suggestion = {
+        enabled = true,
+        -- auto_trigger = true,
+        -- debounce = 500,
+        keymap = {
+          accept = '<C-1>',
+          next = '<C-]>',
+          prev = '<C-[>',
+          dismiss = '<esc>',
+        },
+      },
+      panel = {
+        enabled = true,
+        layout = {
+          position = 'right',
+          ratio = 0.3,
+        },
+      },
+      filetypes = {
+        python = true,
+        javascript = true,
+        typescript = true,
+        markdown = true,
+        sh = function()
+          if string.match(vim.fs.basename(vim.api.nvim_buf_get_name(0)), '^%.env.*') then
+            -- disable for .env files
+            return false
+          end
+          return true
+        end,
+        ['*'] = false,
       },
     },
   },
@@ -920,8 +965,8 @@ require('lazy').setup({
   -- require 'kickstart.plugins.debug',
   -- require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
-  -- require 'kickstart.plugins.autopairs',
-  -- require 'kickstart.plugins.neo-tree',
+  require 'kickstart.plugins.autopairs',
+  require 'kickstart.plugins.neo-tree',
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
@@ -929,7 +974,7 @@ require('lazy').setup({
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
