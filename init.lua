@@ -254,6 +254,16 @@ require('lazy').setup({
         changedelete = { text = '~' },
       },
     },
+    config = function()
+      require('gitsigns').setup()
+      require('scrollbar.handlers.gitsigns').setup()
+    end,
+  },
+  {
+    'numToStr/Comment.nvim',
+    opts = {
+      -- add any options here
+    },
   },
   {
     'zbirenbaum/copilot.lua',
@@ -312,6 +322,111 @@ require('lazy').setup({
   -- {
   --   'luk400/vim-jukit',
   -- },
+  {
+    'yetone/avante.nvim',
+    event = 'VeryLazy',
+    lazy = false,
+    -- version = false, -- set this if you want to always pull the latest change
+    version = '33c9ac2', -- set this if you want to always pull the latest change
+    opts = {
+      provider = 'claude',
+      -- provider = 'copilot'
+      mappings = {
+        suggestion = {
+          dismiss = '<C-d>',
+        },
+      },
+    },
+    -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
+    -- build = 'make',
+    build = 'make BUILD_FROM_SOURCE=true',
+    -- build = "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false" -- for windows
+    dependencies = {
+      'stevearc/dressing.nvim',
+      'nvim-lua/plenary.nvim',
+      'MunifTanjim/nui.nvim',
+      --- The below dependencies are optional,
+      'nvim-tree/nvim-web-devicons', -- or echasnovski/mini.icons
+      -- 'zbirenbaum/copilot.lua', -- for providers='copilot'
+      -- {
+      --   'zbirenbaum/copilot.lua',
+      --   cmd = 'Copilot',
+      --   -- event = 'InsertEnter',
+      --   event = 'VimEnter',
+      --   -- config = function()
+      --   --   require('copilot').setup {}
+      --   -- end,
+      --   -- see config options https://github.com/zbirenbaum/copilot.lua?tab=readme-ov-file#setup-and-configuration
+      --   -- see example usage in lazy https://www.lazyvim.org/extras/coding/copilot
+      --   opts = {
+      --     suggestion = {
+      --       enabled = true,
+      --       -- auto_trigger = true,
+      --       -- debounce = 500,
+      --       keymap = {
+      --         accept = '<C-1>',
+      --         next = '<C-]>',
+      --         prev = '<C-[>',
+      --         dismiss = '<esc>',
+      --       },
+      --     },
+      --     panel = {
+      --       enabled = true,
+      --       layout = {
+      --         position = 'right',
+      --         ratio = 0.3,
+      --       },
+      --     },
+      --     filetypes = {
+      --       python = true,
+      --       javascript = true,
+      --       typescript = true,
+      --       markdown = true,
+      --       svelte = true,
+      --       sh = function()
+      --         if string.match(vim.fs.basename(vim.api.nvim_buf_get_name(0)), '^%.env.*') then
+      --           -- disable for .env files
+      --           return false
+      --         end
+      --         return true
+      --       end,
+      --       ['*'] = false,
+      --     },
+      --   },
+      -- },
+      {
+        -- support for image pasting
+        'HakonHarnes/img-clip.nvim',
+        event = 'VeryLazy',
+        opts = {
+          -- recommended settings
+          default = {
+            embed_image_as_base64 = false,
+            prompt_for_file_name = false,
+            drag_and_drop = {
+              insert_mode = true,
+            },
+            -- required for Windows users
+            use_absolute_path = true,
+          },
+        },
+      },
+      {
+        -- Make sure to set this up properly if you have lazy=true
+        'MeanderingProgrammer/render-markdown.nvim',
+        opts = {
+          file_types = { 'markdown', 'Avante' },
+        },
+        ft = { 'markdown', 'Avante' },
+      },
+    },
+  },
+  {
+    'petertriho/nvim-scrollbar',
+    config = function()
+      require('scrollbar').setup()
+    end,
+  },
 
   -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
   --
@@ -495,6 +610,11 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sa', function()
         builtin.find_files { hidden = true }
       end, { desc = '[S]earch [A]ll files' })
+
+      vim.keymap.set('n', '<leader>so', function()
+        builtin.find_files { sort_last_used = true }
+      end, { desc = '[S]earch [O]ld Files2' })
+
     end,
   },
 
@@ -983,7 +1103,7 @@ require('lazy').setup({
   -- require 'kickstart.plugins.lint',
   require 'kickstart.plugins.autopairs',
   require 'kickstart.plugins.neo-tree',
-  -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+  require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
