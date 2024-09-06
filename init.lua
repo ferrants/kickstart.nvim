@@ -289,6 +289,7 @@ require('lazy').setup({
         javascript = true,
         typescript = true,
         markdown = true,
+        svelte = true,
         sh = function()
           if string.match(vim.fs.basename(vim.api.nvim_buf_get_name(0)), '^%.env.*') then
             -- disable for .env files
@@ -300,6 +301,17 @@ require('lazy').setup({
       },
     },
   },
+  {
+    'almo7aya/openingh.nvim',
+    config = function()
+      vim.keymap.set('n', '<leader>gf', ':OpenInGHFile <CR>', { desc = 'Open in [G]itHub - [F]ile', silent = true, noremap = true })
+      vim.keymap.set('n', '<leader>gd', ':OpenInGHFile develop <CR>', { desc = 'Open in [G]itHub - File on [d]evelop', silent = true, noremap = true })
+      vim.keymap.set('v', '<leader>gf', ':OpenInGHFileLines <CR>', { desc = 'Open in [G]itHub - [F]ile Lines', silent = true, noremap = true })
+    end,
+  },
+  -- {
+  --   'luk400/vim-jukit',
+  -- },
 
   -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
   --
@@ -479,6 +491,10 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sn', function()
         builtin.find_files { cwd = vim.fn.stdpath 'config' }
       end, { desc = '[S]earch [N]eovim files' })
+
+      vim.keymap.set('n', '<leader>sa', function()
+        builtin.find_files { hidden = true }
+      end, { desc = '[S]earch [A]ll files' })
     end,
   },
 
