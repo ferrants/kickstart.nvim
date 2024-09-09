@@ -266,6 +266,10 @@ require('lazy').setup({
     },
   },
   {
+    'neoclide/coc.nvim',
+    branch = 'release',
+  },
+  {
     'zbirenbaum/copilot.lua',
     cmd = 'Copilot',
     -- event = 'InsertEnter',
@@ -298,6 +302,7 @@ require('lazy').setup({
         python = true,
         javascript = true,
         typescript = true,
+        typescriptreact = true,
         markdown = true,
         svelte = true,
         sh = function()
@@ -614,7 +619,6 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>so', function()
         builtin.find_files { sort_last_used = true }
       end, { desc = '[S]earch [O]ld Files2' })
-
     end,
   },
 
