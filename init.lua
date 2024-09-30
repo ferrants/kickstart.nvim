@@ -336,7 +336,7 @@ require('lazy').setup({
     event = 'VeryLazy',
     lazy = false,
     -- version = false, -- set this if you want to always pull the latest change
-    version = '33c9ac2', -- set this if you want to always pull the latest change
+    version = '33c9ac2',
     opts = {
       provider = 'claude',
       -- provider = 'copilot'
@@ -428,6 +428,15 @@ require('lazy').setup({
         },
         ft = { 'markdown', 'Avante' },
       },
+    },
+  },
+  {
+    'folke/todo-comments.nvim',
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    opts = {
+      -- your configuration comes here
+      -- or leave it empty to use the default settings
+      -- refer to the configuration section below
     },
   },
   {
