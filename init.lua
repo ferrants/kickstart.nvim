@@ -290,7 +290,8 @@ require('lazy').setup({
         -- auto_trigger = true,
         -- debounce = 500,
         keymap = {
-          accept = '<C-1>',
+          -- accept = '<C-1>',
+          accept = '<C-.>',
           next = '<C-]>',
           prev = '<C-[>',
           dismiss = '<esc>',
@@ -337,10 +338,80 @@ require('lazy').setup({
     event = 'VeryLazy',
     lazy = false,
     -- version = false, -- set this if you want to always pull the latest change
-    version = '33c9ac2',
+    -- version = '33c9ac2',
+    commit = '8d888c286131d0f201d59bf0131de1146b47a6d7',
     opts = {
-      provider = 'claude',
+      -- provider = 'claude',
+      provider = 'claude35',
+      -- provider = 'openai',
       -- provider = 'copilot'
+      --
+      -- provider = 'ollama',
+      vendors = {
+        claude35 = {
+          __inherited_from = 'claude',
+          endpoint = 'https://api.anthropic.com',
+          -- model = 'claude-3-5-sonnet-20241022',
+          model = 'claude-3-7-sonnet-20250219',
+          api_key_name = 'ANTHROPIC_API_KEY',
+          -- timeout = 30000, -- Timeout in milliseconds
+          temperature = 0,
+          -- max_tokens = 4096,
+          disable_tools = true, -- disable tools!
+        },
+        -- ollama = {
+        --   __inherited_from = 'openai',
+        --   api_key_name = '',
+        --   endpoint = 'http://127.0.0.1:11434/v1',
+        --   -- model = 'deepseek-r1:7b',
+        --   model = 'codegemma:2b',
+        --   temperature = 0,
+        --   max_tokens = 4096,
+        -- },
+        ollama = {
+          api_key_name = '',
+          ask = '',
+          endpoint = 'http://127.0.0.1:11434/api',
+          -- model = 'codegemma:2b',
+          model = 'deepseek-r1:7b',
+          -- model = "phi4",
+          -- model = "qwen2.5-coder:14b",
+          -- model = "llama3.1:latest",
+          parse_curl_args = function(opts, code_opts)
+            return {
+              url = opts.endpoint .. '/chat',
+              headers = {
+                ['Accept'] = 'application/json',
+                ['Content-Type'] = 'application/json',
+              },
+              body = {
+                model = opts.model,
+                options = {
+                  num_ctx = 16384,
+                },
+                messages = require('avante.providers').copilot.parse_messages(code_opts), -- you can make your own message, but this is very advanced
+                stream = true,
+              },
+            }
+          end,
+          parse_stream_data = function(data, handler_opts)
+            -- Parse the JSON data
+            local json_data = vim.fn.json_decode(data)
+            -- Check for stream completion marker first
+            if json_data and json_data.done then
+              handler_opts.on_complete(nil) -- Properly terminate the stream
+              return
+            end
+            -- Process normal message content
+            if json_data and json_data.message and json_data.message.content then
+              -- Extract the content from the message
+              local content = json_data.message.content
+              -- Call the handler with the content
+              handler_opts.on_chunk(content)
+            end
+          end,
+        },
+      },
       mappings = {
         suggestion = {
           dismiss = '<C-d>',
